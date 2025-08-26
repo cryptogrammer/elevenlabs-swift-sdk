@@ -173,7 +173,7 @@ public enum ElevenLabs {
         auth: ElevenLabsConfiguration,
         config: ConversationConfig = .init()
     ) async throws -> Conversation {
-        let conversation = createConversation()
+        let conversation = await createConversation()
         try await conversation.startConversation(auth: auth, options: config.toConversationOptions())
         return conversation
     }
@@ -182,9 +182,9 @@ public enum ElevenLabs {
 
     /// Creates a new Conversation instance with proper dependency injection.
     @MainActor
-    private static func createConversation() -> Conversation {
+    private static func createConversation() async -> Conversation {
         let depsTask = Task { Dependencies.shared }
-        return Conversation(dependencies: depsTask)
+        return await Conversation(dependencies: depsTask)
     }
 
     // MARK: - Re-exports

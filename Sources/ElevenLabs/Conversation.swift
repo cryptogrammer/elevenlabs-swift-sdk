@@ -46,10 +46,10 @@ public final class Conversation: ObservableObject, RoomDelegate {
     init(
         dependencies: Task<Dependencies, Never>,
         options: ConversationOptions = .default
-    ) {
+    ) async {
         _depsTask = dependencies
         self.options = options
-        observeDeviceChanges()
+        await observeDeviceChanges()
     }
 
     deinit {
@@ -354,10 +354,10 @@ public final class Conversation: ObservableObject, RoomDelegate {
         print("[ElevenLabs] Previous conversation state cleaned up for fresh Room")
     }
 
-    private func observeDeviceChanges() {
+    private func observeDeviceChanges() async {
         do {
             try AudioManager.shared.set(microphoneMuteMode: .inputMixer)
-            try AudioManager.shared.setRecordingAlwaysPreparedMode(true)
+            try await AudioManager.shared.setRecordingAlwaysPreparedMode(true)
         } catch {
             // ignore: we have no error handler public API yet
         }
